@@ -82,7 +82,7 @@
     function renderStats() {
         const total = applications.length;
         const active = applications.filter(a =>
-            !['Rejected', 'Withdrawn', 'Accepted', 'Unsuccessful'].includes(a.status)
+            !['Bookmarked', 'Rejected', 'Withdrawn', 'Accepted', 'Unsuccessful'].includes(a.status)
         ).length;
         const offers = applications.filter(a =>
             ['Offer', 'Accepted'].includes(a.status)
@@ -195,6 +195,7 @@
                 <td>
                     <div class="actions-cell">
                         ${app.jobUrl ? `<a href="${escapeHtml(app.jobUrl)}" target="_blank" rel="noopener" class="btn-icon" title="Open job advert" onclick="event.stopPropagation()">&#128279;</a>` : ''}
+                        <button class="btn-icon duplicate-btn" data-id="${app.id}" title="Duplicate" onclick="event.stopPropagation()">&#128203;</button>
                         <button class="btn-icon edit-btn" data-id="${app.id}" title="Edit" onclick="event.stopPropagation()">&#9998;</button>
                         <button class="btn-icon delete-btn" data-id="${app.id}" title="Delete" onclick="event.stopPropagation()">&#128465;</button>
                     </div>
@@ -429,6 +430,31 @@
         }
     });
 
+    // ---------- Duplicate ----------
+
+    async function duplicateApplication(id) {
+        const app = applications.find(a => a.id === id);
+        if (!app) return;
+
+        // Copy all fields except id and timestamps
+        const copy = { ...app };
+        delete copy.id;
+        delete copy.createdAt;
+        delete copy.updatedAt;
+        copy.status = 'Bookmarked';
+        copy.dateApplied = '';
+        copy.notes = (copy.notes || '') + (copy.notes ? '\n\n' : '') + 'Duplicated from original application.';
+
+        try {
+            const created = await apiCreate(copy);
+            applications.push(created);
+            showToast('Application duplicated');
+            render();
+        } catch (err) {
+            showToast('Error: ' + err.message, true);
+        }
+    }
+
     // ---------- Export CSV ----------
 
     function exportCSV() {
@@ -491,13 +517,16 @@
         if (e.key === 'Escape') closeAllModals();
     });
 
-    // Table row click -> detail view; edit/delete buttons
+    // Table row click -> detail view; edit/delete/duplicate buttons
     tableBody.addEventListener('click', (e) => {
         const editBtn = e.target.closest('.edit-btn');
         const deleteBtn = e.target.closest('.delete-btn');
+        const duplicateBtn = e.target.closest('.duplicate-btn');
         const row = e.target.closest('tr');
 
-        if (editBtn) {
+        if (duplicateBtn) {
+            duplicateApplication(duplicateBtn.dataset.id);
+        } else if (editBtn) {
             openEditModal(editBtn.dataset.id);
         } else if (deleteBtn) {
             confirmDelete(deleteBtn.dataset.id);
