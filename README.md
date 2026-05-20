@@ -77,7 +77,7 @@ startup.sh
 Run the deploy script from PowerShell:
 
 ```powershell
-C:\AI-Apps\job-tracker\deploy.ps1
+C:\location_of_app_files\deploy.ps1
 ```
 
 This uses `az webapp deploy --type zip` which pushes only the application files and **preserves your App Settings**.
