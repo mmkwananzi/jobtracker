@@ -1,14 +1,14 @@
 #!/bin/bash
 # Deploy to Azure Web App using zip deploy (preserves App Settings)
 
-APP_NAME="gagisa-job-tracker"
-RESOURCE_GROUP="GAGISA-SERVER-2022_group"
+APP_NAME="your_app_name" # Update with your Azure Web App name
+RESOURCE_GROUP="your_resource_group_name" # Update with your resource group name
 ZIP_FILE="deploy.zip"
 
 echo "Creating deployment package..."
 
 # Create zip excluding local-only files
-cd "C:/AI-Apps/job-tracker"
+cd "$(dirname "$0")" # Change to the directory of this script
 rm -f $ZIP_FILE
 zip -r $ZIP_FILE . -x ".env" "__pycache__/*" "*.pyc" ".venv/*" "venv/*" ".gitignore" "deploy.sh" "deploy.zip" ".azure/*"
 

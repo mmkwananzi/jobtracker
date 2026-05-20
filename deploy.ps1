@@ -1,8 +1,8 @@
 # Deploy Job Tracker to Azure Web App (preserves App Settings)
 
-$AppName = "gagisa-job-tracker"
-$ResourceGroup = "GAGISA-SERVER-2022_group"
-$Source = "C:\AI-Apps\job-tracker"
+$AppName = "your_app_name" # Update with your Azure Web App name
+$ResourceGroup = "your_resource_group_name" # Update with your resource group name
+$Source = "$(Split-Path -Parent $MyInvocation.MyCommand.Path)" # Directory of this script
 $ZipPath = "$Source\deploy.zip"
 
 $include = @(
