@@ -63,6 +63,9 @@ Go to **Configuration > Application Settings** and add:
 | `AZURE_ACCOUNT_KEY` | Your Storage Account key |
 | `AZURE_CONTAINER_NAME` | `job-tracker` |
 | `AZURE_BLOB_NAME` | `applications.json` |
+| `SCM_DO_BUILD_DURING_DEPLOYMENT` | `True` |
+| `WEBSITE_HTTPLOGGING_RETENTION_DAYS` | `3` |
+
 
 ### Step 3: Set the Startup Command
 
